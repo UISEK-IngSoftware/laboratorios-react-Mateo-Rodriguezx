@@ -1,17 +1,20 @@
-import { AppBar, Toolbar } from "@mui/material";
-import logo from "../assets/pokedex-logo.png";
-import './header.css';
+import { AppBar, Container, Toolbar } from "@mui/material";
+import pokedexLogo from "../assets/logo.png";
+
+import './Header.css';
 
 export default function Header() {
     return (
-        <header className="Pokedex-navbar">
-            <AppBar position="static">
-                <Toolbar>
-                    <div>
-                        <img src={logo} alt="Pokedex logo" />
-                    </div>
-                </Toolbar>
-            </AppBar>
+        <header className="pokedex-navbar">
+            <Container>
+                <AppBar position="static">
+                    <Toolbar>
+                        <div className="image-conteiner">
+                            <img src={pokedexLogo} alt="Pokédex Logo" height={100}/>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+            </Container>
         </header>
     );
 }
