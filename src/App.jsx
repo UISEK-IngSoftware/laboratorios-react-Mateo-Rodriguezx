@@ -4,19 +4,21 @@ import Header from './components/header'
 import PokemonList from './pages/PokemonList'
 import PokemonForm from './pages/PokemonForm'
 import { Container, Grid } from '@mui/material'
+import LoginPage from './pages/LoginPage'
 
 function App() {
 
   return (
     <>
-      <Header />
       <Container>
-      <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<PokemonList />} />
-        <Route path='/add-pokemon' element={<PokemonForm />} />
-      </Routes>
-      </BrowserRouter>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path='/' element={<PokemonList />} />
+            <Route path='/add-pokemon' element={<PokemonForm />} />
+            <Route path='/login' element={<LoginPage />} />
+          </Routes>
+        </BrowserRouter>
       </Container>
     </>
   )

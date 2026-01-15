@@ -1,17 +1,52 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { addPokemon } from "../services/pokemonService";
+import { useNavigate } from "react-router-dom";
+
 
 export default function PokemonForm() {
+    const navigation = useNavigate();
+    const [pokemonData, setPokemonData] = useState({
+        name: '',
+        type: '',
+        weight: '',
+        height: '',
+        picture: null
+    });
+
+    const handleChange = (e) => {
+        const { name, value, files } = e.target;
+        if (name === 'picture') {
+            setPokemonData({...pokemonData, picture: files[0] });
+        } else {
+            setPokemonData({...pokemonData, [name]: value });
+        }
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const newPokemon = await addPokemon(pokemonData);
+            alert("Pokemon agregado exitosamente");
+            console.log(newPokemon);
+            navigation('/');
+        }catch (error) {
+            console.error("Error al agregar el pokemon:", error);
+            alert("Error al agregar el pokemon");
+        }
+    };
+
     return (
         <>
             <Typography variant="h4" gutterBottom>
                 Formulario de pokemon.
             </Typography>
-            <Box component= "form" sx={{ display: 'flex', flexDirection: 'column', gap: 2, }}>
-                <TextField label="Nombre" name="name" variant="outlined" required />
-                <TextField label="Tipo" name="type" variant="outlined" required />
-                <TextField label="Peso" name="weight" variant="outlined" required />
-                <TextField label="Altura" name="height" variant="outlined" required />        
-                <input name="picture" type="file"  />      
+            <Box component= "form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, }}>
+                <TextField label="Nombre" name="name" variant="outlined" onChange={handleChange} value={pokemonData.name}/>
+                <TextField label="Tipo" name="type" variant="outlined" onChange={handleChange} value={pokemonData.type} />
+                <TextField label="Peso" name="weight" variant="outlined" onChange={handleChange} value={pokemonData.weight} />
+                <TextField label="Altura" name="height" variant="outlined" onChange={handleChange} value={pokemonData.height} />        
+                <input name="picture" type="file" onChange={handleChange} />      
                 <Button variant="contained" color="primary" type="submit">
                     Enviar
                 </Button>
