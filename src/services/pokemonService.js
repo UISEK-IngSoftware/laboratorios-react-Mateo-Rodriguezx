@@ -53,3 +53,4 @@ export const updatePokemon = async (id, pokemonData) => {
 export const deletePokemon = (id) => {
   return axios.delete(`${API_BASE_URL}/pokemons/${id}/`);
 };
+

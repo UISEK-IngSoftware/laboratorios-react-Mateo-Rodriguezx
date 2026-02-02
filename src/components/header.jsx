@@ -1,19 +1,30 @@
-import { AppBar, Button, Container, Toolbar } from "@mui/material";
+import { AppBar, Button, Toolbar } from "@mui/material";
 import pokedexLogo from "../assets/logo.png";
 import { logout } from "../services/authService";
 import './Header.css';
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Spinner from "./spinner";
 
 export default function Header() {
     const isLoggedIn = localStorage.getItem('access_token') !== null;
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
 
     const handeLogout = async () => {
-    await logout();
-    alert("Cierre de sesión exitoso");
-    navigate('/');
+        setLoading(true);
+        try {
+            await logout();
+            alert("Cierre de sesión exitoso");
+            navigate('/');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return <Spinner />;
+    }
 
     return (
         <header className="pokedex-navbar">

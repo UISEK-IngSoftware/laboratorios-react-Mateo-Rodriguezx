@@ -1,35 +1,37 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  CardMedia,
-  CardContent
-} from "@mui/material";
-
+import { Box, Typography, Button, Card, CardMedia, CardContent } from "@mui/material";
 import { getPokemonById } from "../services/pokemonService";
+import Spinner from "../components/spinner";
 
 export default function PokemonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [pokemon, setPokemon] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const mediaUrl = import.meta.env.VITE_MEDIA_BASE_URL;
 
   useEffect(() => {
+    setLoading(true);
     getPokemonById(id)
       .then(res => {
         setPokemon(res.data);
       })
       .catch(err => {
         console.error("Error cargando pokemon:", err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [id]);
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   if (!pokemon) {
-    return <Typography>Cargando...</Typography>;
+    return <Typography>No se pudo cargar el Pokémon</Typography>;
   }
 
   const imageUrl = pokemon.picture

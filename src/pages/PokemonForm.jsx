@@ -8,6 +8,8 @@ import {
   updatePokemon
 } from "../services/pokemonService";
 
+import Spinner from "../components/spinner";
+
 export default function PokemonForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,17 +22,25 @@ export default function PokemonForm() {
     picture: null
   });
 
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     if (id) {
-      getPokemonById(id).then(res => {
-        setPokemonData({
-          name: res.data.name,
-          type: res.data.type,
-          weight: res.data.weight,
-          height: res.data.height,
-          picture: res.data.picture
+      setLoading(true);
+      getPokemonById(id)
+        .then(res => {
+          setPokemonData({
+            name: res.data.name,
+            type: res.data.type,
+            weight: res.data.weight,
+            height: res.data.height,
+            picture: res.data.picture
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      });
     }
   }, [id]);
 
@@ -46,6 +56,7 @@ export default function PokemonForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
 
     try {
       if (id) {
@@ -60,8 +71,14 @@ export default function PokemonForm() {
     } catch (error) {
       console.error("Error guardando Pokémon:", error);
       alert("Error al guardar Pokémon");
+    } finally {
+      setSaving(false);
     }
   };
+
+  if (loading || saving) {
+    return <Spinner />;
+  }
 
   return (
     <Box sx={{ maxWidth: 400, margin: "auto", mt: 4 }}>
@@ -77,7 +94,7 @@ export default function PokemonForm() {
 
         <input type="file" name="picture" onChange={handleChange} />
 
-        <Button variant="contained" type="submit">
+        <Button variant="contained" type="submit" disabled={saving}>
           Guardar
         </Button>
       </Box>
